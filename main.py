@@ -33,11 +33,11 @@ while running:
     screen.fill("Gray")
 
     # render game here
-    screen.blit(surf, (surfx, surfy))
+    screen.blit(player_ship, (surfx, surfy))
     surfx += 0.1
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
 
-    clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
+    #clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
 
 pygame.quit()
