@@ -12,6 +12,10 @@ screen = pygame.display.set_mode((screenx, screeny))
 pygame.display.set_caption('Element Z')
 clock = pygame.time.Clock()
 running = True
+
+# testing surface
+surf = pygame.Surface((100, 200))
+
 # ensures that code stays running forever unless the user closes out of the window
 while running:
     # poll for events
@@ -24,7 +28,7 @@ while running:
     screen.fill("Gray")
 
     # render game here
-
+    screen.blit(surf, (100, 150))
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
 
