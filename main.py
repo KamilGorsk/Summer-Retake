@@ -7,8 +7,9 @@ pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more malleable
 # as we are no longer working with hard-coded numbers.
 screenx, screeny = 1280, 720
-
 screen = pygame.display.set_mode((screenx, screeny))
+# changes the name of the window to the games title
+pygame.display.set_caption('Element Z')
 clock = pygame.time.Clock()
 running = True
 # ensures that code stays running forever unless the user closes out of the window
