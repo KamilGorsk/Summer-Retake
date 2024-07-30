@@ -15,6 +15,11 @@ running = True
 
 # testing surface
 surf = pygame.Surface((100, 200))
+surf.fill('blue')
+surfx, surfy = 100, 150
+
+# image loading - loads all images used for the game
+player_ship = pygame.image.load('images/player.png').convert_alpha()
 
 # ensures that code stays running forever unless the user closes out of the window
 while running:
@@ -28,7 +33,8 @@ while running:
     screen.fill("Gray")
 
     # render game here
-    screen.blit(surf, (100, 150))
+    screen.blit(surf, (surfx, surfy))
+    surfx += 0.1
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
 
