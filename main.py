@@ -35,7 +35,7 @@ asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha(
 asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
 
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
-projectile_rect = projectile_main.get_rect(bottomleft=(screenx - 20, screeny - 20))
+projectile_rect = projectile_main.get_rect(bottomleft=(20, screeny - 20))
 
 # classes
 
