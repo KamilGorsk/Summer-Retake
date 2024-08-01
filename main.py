@@ -17,7 +17,7 @@ clock = pygame.time.Clock()
 running = True
 
 # testing surface
-player_pos = pygame.Surface((100, 200))
+# player_pos = pygame.Surface((100, 200))
 # playerx, playery = 100, 150
 
 # image loading - loads all images used for the game, using the join method we can find the desired image
