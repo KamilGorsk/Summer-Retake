@@ -25,10 +25,11 @@ player_pos = pygame.Surface((100, 200))
 
 player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
-
 game_background = pygame.image.load(join('images', 'background.png')).convert()
 star_background = pygame.image.load(join('images', 'star.png')).convert_alpha()
 star_loc = [(randint(0, screenx), randint(0, screeny)) for i in range(20)]
+asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
+asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
 # ensures that code stays running forever unless the user closes out of the window
 
 while running:
@@ -45,6 +46,7 @@ while running:
     for loc in star_loc:
         screen.blit(star_background, loc)
     screen.blit(player_ship, player_rect)
+    screen.blit(asteroid_main, asteroid_rect)
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
 
