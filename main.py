@@ -1,6 +1,7 @@
 # Importing pygame, personal pycharm has it installed but when exporting the script,
 # other machines might not.
 import pygame
+from os.path import join
 
 # default pygame setup
 pygame.init()
@@ -15,11 +16,11 @@ running = True
 
 # testing surface
 surf = pygame.Surface((100, 200))
-surf.fill('blue')
 surfx, surfy = 100, 150
 
-# image loading - loads all images used for the game
-player_ship = pygame.image.load('images/player.png').convert_alpha()
+# image loading - loads all images used for the game, using the join method we can find the desired image
+# making the code more robust overall.
+player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 
 # ensures that code stays running forever unless the user closes out of the window
 while running:
@@ -38,6 +39,6 @@ while running:
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
 
-    #clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
+    # clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
 
 pygame.quit()
