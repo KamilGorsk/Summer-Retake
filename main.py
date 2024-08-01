@@ -25,6 +25,7 @@ running = True
 
 player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
+player_direction = 1
 
 game_background = pygame.image.load(join('images', 'background.png')).convert()
 
@@ -55,11 +56,17 @@ while running:
     for loc in star_loc:
         screen.blit(star_background, loc)
     screen.blit(projectile_main, projectile_rect)
+
+    # Player bounce movement .x is just .left
+    player_rect.x += player_direction * 1
+    if player_rect.right > screenx or player_rect.left < 0:
+        player_direction *= -1
     screen.blit(player_ship, player_rect)
+
     screen.blit(asteroid_main, asteroid_rect)
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
 
-    # clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
+    clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
 
 pygame.quit()
