@@ -4,7 +4,7 @@ import pygame
 
 # default pygame setup
 pygame.init()
-# screen variables created early on making it easier to call later down the line and makes our code more malleable
+# screen variables created early on making it easier to call later down the line and makes our code more robust
 # as we are no longer working with hard-coded numbers.
 screenx, screeny = 1280, 720
 screen = pygame.display.set_mode((screenx, screeny))
