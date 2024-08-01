@@ -3,7 +3,6 @@
 import pygame
 from os.path import join
 from random import randint
-from random import randrange
 
 # default pygame setup
 pygame.init()
@@ -26,13 +25,20 @@ running = True
 
 player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
+
 game_background = pygame.image.load(join('images', 'background.png')).convert()
+
 star_background = pygame.image.load(join('images', 'star.png')).convert_alpha()
 star_loc = [(randint(0, screenx), randint(0, screeny)) for i in range(20)]
+
 asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
 asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
+
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
 projectile_rect = projectile_main.get_rect(bottomleft=(screenx - 20, screeny - 20))
+
+# classes
+
 # ensures that code stays running forever unless the user closes out of the window
 
 while running:
