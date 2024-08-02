@@ -54,10 +54,6 @@ while running:
             running = False
     # pygame.key / pygame.mouse are better for input than event loop as they make it easier to integrate with classes
     # also can check for continuous presses
-       # if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
-            #print(1)
-       # if event.type == pygame.MOUSEMOTION:
-        #    player_rect.center = event.pos
     # input - storing return value inside a var for arrow keys + WASD movement using a boolean value
     keys = pygame.key.get_pressed()
     player_direction.x = int(keys[pygame.K_RIGHT] or keys[pygame.K_d]) - int(keys[pygame.K_LEFT] or keys[pygame.K_a])
