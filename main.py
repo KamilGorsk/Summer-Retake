@@ -3,6 +3,7 @@
 import pygame
 from os.path import join
 from random import randint
+import time
 
 # default pygame setup
 pygame.init()
@@ -58,6 +59,10 @@ while running:
     player_dir = player_dir.normalize() if player_dir else player_dir
     player_rect.center += player_dir * player_speed * dt
 
+    # projectile firing
+    recent_keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]:
+        print('fire')
     # fill the screen with colour to wipe away anything from last frame
     screen.fill("Gray")
 
