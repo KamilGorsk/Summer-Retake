@@ -15,10 +15,6 @@ pygame.display.set_caption('Element Z')
 Clock = pygame.time.Clock()
 running = True
 
-# testing surface
-# player_pos = pygame.Surface((100, 200))
-# playerx, playery = 100, 150
-
 # image loading - loads all images used for the game, using the join method we can find the desired image
 # making the code more robust overall.
 # if an image has no transparent pixels we want to call .convert otherwise .convert_alpha, increases fps, runs smoother
@@ -26,7 +22,7 @@ running = True
 player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
 # using vector math for movement as vectors are incredibly powerful
-player_direction = pygame.math.Vector2(0, 0)
+player_dir = pygame.math.Vector2(0, 0)
 # pixels/frame
 player_speed = 300
 
@@ -56,10 +52,11 @@ while running:
     # also can check for continuous presses
     # input - storing return value inside a var for arrow keys + WASD movement using a boolean value
     keys = pygame.key.get_pressed()
-    player_direction.x = int(keys[pygame.K_RIGHT] or keys[pygame.K_d]) - int(keys[pygame.K_LEFT] or keys[pygame.K_a])
-    player_direction.y = int(keys[pygame.K_DOWN] or keys[pygame.K_s]) - int(keys[pygame.K_UP] or keys[pygame.K_w])
-
-    player_rect.center += player_direction * player_speed * dt
+    player_dir.x = int(keys[pygame.K_RIGHT] or keys[pygame.K_d]) - int(keys[pygame.K_LEFT] or keys[pygame.K_a])
+    player_dir.y = int(keys[pygame.K_DOWN] or keys[pygame.K_s]) - int(keys[pygame.K_UP] or keys[pygame.K_w])
+    # normalizing movement, so it's consistent and stays at 300 whichever direction the player is going
+    player_dir = player_dir.normalize() if player_dir else player_dir
+    player_rect.center += player_dir * player_speed * dt
 
     # fill the screen with colour to wipe away anything from last frame
     screen.fill("Gray")
