@@ -26,9 +26,9 @@ running = True
 player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
 # using vector math for movement as vectors are incredibly powerful
-player_direction = pygame.math.Vector2(1, 0)
+player_direction = pygame.math.Vector2(0, 0)
 # pixels/frame
-player_speed = 10
+player_speed = 300
 
 game_background = pygame.image.load(join('images', 'background.png')).convert()
 
@@ -46,12 +46,25 @@ projectile_rect = projectile_main.get_rect(bottomleft=(20, screeny - 20))
 # ensures that code stays running forever unless the user closes out of the window
 
 while running:
-    Clock.tick(240)  # limits fps to 240 makes a lot of stuff run smoother, need to implement framerate independence
+    dt = Clock.tick(240) / 1000  # framerate independence using delta time method formula is direction * speed * dt
     # poll for events
     # pygame.QUIT event means the user clicked x to close the window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+    # pygame.key / pygame.mouse are better for input than event loop as they make it easier to integrate with classes
+    # also can check for continuous presses
+       # if event.type == pygame.KEYDOWN and event.key == pygame.K_1:
+            #print(1)
+       # if event.type == pygame.MOUSEMOTION:
+        #    player_rect.center = event.pos
+    # input - storing return value inside a var for arrow keys + WASD movement using a boolean value
+    keys = pygame.key.get_pressed()
+    player_direction.x = int(keys[pygame.K_RIGHT] or keys[pygame.K_d]) - int(keys[pygame.K_LEFT] or keys[pygame.K_a])
+    player_direction.y = int(keys[pygame.K_DOWN] or keys[pygame.K_s]) - int(keys[pygame.K_UP] or keys[pygame.K_w])
+
+    player_rect.center += player_direction * player_speed * dt
+
     # fill the screen with colour to wipe away anything from last frame
     screen.fill("Gray")
 
@@ -61,8 +74,6 @@ while running:
         screen.blit(star_background, loc)
     screen.blit(projectile_main, projectile_rect)
 
-    # player movement, taking the tuple position of the rect and adding a vector to it
-    player_rect.center += player_direction * player_speed
     screen.blit(player_ship, player_rect)
 
     screen.blit(asteroid_main, asteroid_rect)
