@@ -12,7 +12,7 @@ screenx, screeny = 1280, 720
 screen = pygame.display.set_mode((screenx, screeny))
 # changes the name of the window to the games title
 pygame.display.set_caption('Element Z')
-clock = pygame.time.Clock()
+Clock = pygame.time.Clock()
 running = True
 
 # testing surface
@@ -25,7 +25,10 @@ running = True
 
 player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
-player_direction = 1
+# using vector math for movement as vectors are incredibly powerful
+player_direction = pygame.math.Vector2(1, 0)
+# pixels/frame
+player_speed = 10
 
 game_background = pygame.image.load(join('images', 'background.png')).convert()
 
@@ -43,6 +46,7 @@ projectile_rect = projectile_main.get_rect(bottomleft=(20, screeny - 20))
 # ensures that code stays running forever unless the user closes out of the window
 
 while running:
+    Clock.tick(240)  # limits fps to 240 makes a lot of stuff run smoother, need to implement framerate independence
     # poll for events
     # pygame.QUIT event means the user clicked x to close the window
     for event in pygame.event.get():
@@ -57,16 +61,12 @@ while running:
         screen.blit(star_background, loc)
     screen.blit(projectile_main, projectile_rect)
 
-    # Player bounce movement .x is just .left
-    player_rect.x += player_direction * 1
-    if player_rect.right > screenx or player_rect.left < 0:
-        player_direction *= -1
+    # player movement, taking the tuple position of the rect and adding a vector to it
+    player_rect.center += player_direction * player_speed
     screen.blit(player_ship, player_rect)
 
     screen.blit(asteroid_main, asteroid_rect)
     # update() the display to put game on screen .flip works here as well
     pygame.display.update()
-
-    clock.tick(60)  # limits fps to 60 makes a lot of stuff run smoother and simplifies some math
 
 pygame.quit()
