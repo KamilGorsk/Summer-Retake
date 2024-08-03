@@ -1,7 +1,7 @@
 # Importing pygame, personal pycharm has it installed but when exporting the script,
 # other machines might not.
 from os.path import join
-from random import randint
+from random import randint, uniform
 
 import pygame
 
@@ -74,9 +74,17 @@ class Asteroid(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_rect(center=pos)
+        self.start_time = pygame.time.get_ticks()
+        self.lifetime = 3000
+        self.dir = pygame.Vector2(uniform(-0.5, 0.5), 1)
+        self.speed = randint(420, 520)
 
     def update(self, dt):
-        self.rect.centery += 400 * dt
+        self.rect.center += self.dir * self.speed * dt
+        if pygame.time.get_ticks() - self.start_time >= self.lifetime:
+            self.kill()
+
+
 # default pygame setup
 pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more robust
