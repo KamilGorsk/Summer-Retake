@@ -75,7 +75,8 @@ class Asteroid(pygame.sprite.Sprite):
         self.image = surf
         self.rect = self.image.get_rect(center=pos)
 
-
+    def update(self, dt):
+        self.rect.centery += 400 * dt
 # default pygame setup
 pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more robust
@@ -115,7 +116,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == asteroid_event:
-            print('Asteroid has been deployed')
+            x, y = randint(0, screenx), randint(-200, -100)
+            Asteroid(asteroid_main, (x, y), all_sprites)
     # calls an update method on all the sprites inside the group, passing delta time through it
     all_sprites.update(dt)
 
