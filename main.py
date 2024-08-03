@@ -3,6 +3,7 @@
 from os.path import join
 from random import randint
 
+import time
 import pygame
 
 
@@ -33,6 +34,14 @@ class Player(pygame.sprite.Sprite):
         if recent_keys[pygame.K_SPACE]:
             print('fire')
 
+
+class Star(pygame.sprite.Sprite):
+    def __init__(self, groups, surf):
+        super().__init__(groups)
+        self.image = surf
+        self.rect = self.image.get_rect(center=(randint(0, screenx), randint(0, screeny)))
+
+
 # default pygame setup
 pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more robust
@@ -44,17 +53,18 @@ pygame.display.set_caption('Element Z')
 Clock = pygame.time.Clock()
 running = True
 
-# image loading - loads all images used for the game, using the join method we can find the desired image
-# making the code more robust overall.
 # if an image has no transparent pixels we want to use .convert otherwise .convert_alpha, increases fps, runs smoother
 # creating a group for all sprites for better optimization
+# changed code to use a single import 20 times rather than creating 20 at once for better efficiency
 all_sprites = pygame.sprite.Group()
+star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
+for i in range(20):
+    Star(all_sprites, star_image)
 player = Player(all_sprites)
 
+# image loading - loads all images used for the game, using the join method we can find the desired image
+# making the code more robust overall.
 game_background = pygame.image.load(join('images', 'background.png')).convert()
-
-star_background = pygame.image.load(join('images', 'star.png')).convert_alpha()
-star_loc = [(randint(0, screenx), randint(0, screeny)) for i in range(20)]
 
 asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
 asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
@@ -80,11 +90,7 @@ while running:
 
     # render game here
     screen.blit(game_background, (0, 0))
-    for loc in star_loc:
-        screen.blit(star_background, loc)
 
-    screen.blit(projectile_main, projectile_rect)
-    screen.blit(asteroid_main, asteroid_rect)
     # draws every image in the group
     all_sprites.draw(screen)
 
