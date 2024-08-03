@@ -5,14 +5,6 @@ from random import randint
 
 import pygame
 
-
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load(join('images', 'player.png')).convert_alpha()
-        self.rect = self.image.get_rect(center=(screenx / 2, screeny / 2))
-
-
 # default pygame setup
 pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more robust
@@ -28,10 +20,20 @@ running = True
 # making the code more robust overall.
 # if an image has no transparent pixels we want to call .convert otherwise .convert_alpha, increases fps, runs smoother
 
-player = Player
-
 # player_ship = pygame.image.load(join('images', 'player.png')).convert_alpha()
 # player_rect = player_ship.get_rect(center=(screenx / 2, screeny / 2))
+
+
+# Player class as I already re-sized the asset in a separate program, I will not be needing a transform.scale
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load(join('images', 'player.png')).convert_alpha()
+        self.rect = self.image.get_rect(center=(screenx / 2, screeny / 2))
+        self.speed = 300
+
+
+player = Player()
 # using vector math for movement as vectors are incredibly powerful
 # player_dir = pygame.math.Vector2(0, 0)
 # pixels/frame
