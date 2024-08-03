@@ -3,7 +3,6 @@
 from os.path import join
 from random import randint
 
-import time
 import pygame
 
 
@@ -18,6 +17,18 @@ class Player(pygame.sprite.Sprite):
         self.speed = 300
         self.dir = pygame.math.Vector2()
 
+        # anti-spam system
+        self.can_shoot = True
+        self.projectile_shoot_time = 0
+        # how fast player can shoot default = 500ms
+        self.cooldown_duration = 500
+
+    def projectile_timer(self):
+        if not self.can_shoot:
+            current_time = pygame.time.get_ticks()
+            if current_time - self.projectile_shoot_time >= self.cooldown_duration:
+                self.can_shoot = True
+
     # pygame.key / pygame.mouse are better for input than event loop as they make it easier to integrate with classes
     # also can check for continuous presses
     # input - storing return value inside a var for arrow keys + WASD movement using a boolean value
@@ -31,8 +42,12 @@ class Player(pygame.sprite.Sprite):
 
         # projectile firing
         recent_keys = pygame.key.get_pressed()
-        if recent_keys[pygame.K_SPACE]:
-            print('fire')
+        if recent_keys[pygame.K_SPACE] and self.can_shoot:
+            Projectile(projectile_main, self.rect.midtop, all_sprites)
+            self.can_shoot = False
+            self.projectile_shoot_time = pygame.time.get_ticks()
+
+        self.projectile_timer()
 
 
 class Star(pygame.sprite.Sprite):
@@ -40,6 +55,25 @@ class Star(pygame.sprite.Sprite):
         super().__init__(groups)
         self.image = surf
         self.rect = self.image.get_rect(center=(randint(0, screenx), randint(0, screeny)))
+
+
+class Projectile(pygame.sprite.Sprite):
+    def __init__(self, surf, pos, groups):
+        super().__init__(groups)
+        self.image = surf
+        self.rect = self.image.get_rect(midbottom=pos)
+
+    def update(self, dt):
+        self.rect.centery -= 400 * dt
+        if self.rect.bottom < 0:
+            self.kill()
+
+
+class Asteroid(pygame.sprite.Sprite):
+    def __init__(self, surf, pos, groups):
+        super().__init__(groups)
+        self.image = surf
+        self.rect = self.image.get_rect(center=pos)
 
 
 # default pygame setup
@@ -53,6 +87,12 @@ pygame.display.set_caption('Element Z')
 Clock = pygame.time.Clock()
 running = True
 
+# image loading - loads all images used for the game, using the join method we can find the desired image
+# making the code more robust overall.
+game_background = pygame.image.load(join('images', 'background.png')).convert()
+asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
+projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
+
 # if an image has no transparent pixels we want to use .convert otherwise .convert_alpha, increases fps, runs smoother
 # creating a group for all sprites for better optimization
 # changed code to use a single import 20 times rather than creating 20 at once for better efficiency
@@ -61,16 +101,6 @@ star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
 for i in range(20):
     Star(all_sprites, star_image)
 player = Player(all_sprites)
-
-# image loading - loads all images used for the game, using the join method we can find the desired image
-# making the code more robust overall.
-game_background = pygame.image.load(join('images', 'background.png')).convert()
-
-asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
-asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
-
-projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
-projectile_rect = projectile_main.get_rect(bottomleft=(20, screeny - 20))
 
 # custom events from session 9, interval timer
 asteroid_event = pygame.event.custom_type()
