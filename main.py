@@ -5,6 +5,16 @@ from random import randint
 
 import pygame
 
+
+# sprites and classes
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = pygame.image.load(join('images', 'player.png')).convert_alpha()
+        self.rect = self.image.get_rect(center=(screenx / 2, screeny / 2))
+        self.speed = 300
+
+
 # default pygame setup
 pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more robust
@@ -25,13 +35,6 @@ running = True
 
 
 # Player class as I already re-sized the asset in a separate program, I will not be needing a transform.scale
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.image = pygame.image.load(join('images', 'player.png')).convert_alpha()
-        self.rect = self.image.get_rect(center=(screenx / 2, screeny / 2))
-        self.speed = 300
-
 
 player = Player()
 # using vector math for movement as vectors are incredibly powerful
