@@ -7,7 +7,7 @@ import time
 import pygame
 
 
-# sprites and classes
+# sprites and classes from session 9 - look at slides for help
 # player class, already re-sized the asset in a separate program, I will not be needing a transform.scale
 # using vector math for movement as vectors are incredibly powerful, dir short for direction.
 class Player(pygame.sprite.Sprite):
@@ -72,8 +72,10 @@ asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
 projectile_rect = projectile_main.get_rect(bottomleft=(20, screeny - 20))
 
-# ensures that code stays running forever unless the user closes out of the window
+# custom events from session 9
+asteroid_event = pygame.event.custom_type()
 
+# ensures that code stays running forever unless the user closes out of the window
 while running:
     dt = Clock.tick(240) / 1000  # framerate independence using delta time method formula is direction * speed * dt
     # poll for events
