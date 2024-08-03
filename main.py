@@ -72,8 +72,9 @@ asteroid_rect = asteroid_main.get_rect(center=(screenx / 2, screeny / 2))
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
 projectile_rect = projectile_main.get_rect(bottomleft=(20, screeny - 20))
 
-# custom events from session 9
+# custom events from session 9, interval timer
 asteroid_event = pygame.event.custom_type()
+pygame.time.set_timer(asteroid_event, 500)
 
 # ensures that code stays running forever unless the user closes out of the window
 while running:
@@ -83,7 +84,8 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-
+        if event.type == asteroid_event:
+            print('Asteroid has been deployed')
     # calls an update method on all the sprites inside the group, passing delta time through it
     all_sprites.update(dt)
 
