@@ -85,6 +85,29 @@ class Asteroid(pygame.sprite.Sprite):
             self.kill()
 
 
+def collisions():
+    # making running a global variable, so I am able to call it here to shut down the game on collision without creating
+    # a new variable. Not the best way to go around making a loss state however for a small pygame project like this
+    # it seems good enough.
+    global running
+
+    collision_sprites = pygame.sprite.spritecollide(player, asteroid_sprites, True)
+    if collision_sprites:
+        running = False
+
+    for projectile in projectile_sprites:
+        collided_sprites = pygame.sprite.spritecollide(projectile, asteroid_sprites, True)
+        if collided_sprites:
+            projectile.kill()
+
+
+def display_score():
+    current_time = pygame.time.get_ticks()
+    text_score = font.render(str(current_time), True, 'white')
+    text_rect = text_score.get_rect(midbottom=(screenx / 2, screeny - 50))
+    screen.blit(text_score, text_rect)
+
+
 # default pygame setup
 pygame.init()
 # screen variables created early on making it easier to call later down the line and makes our code more robust
@@ -96,12 +119,13 @@ pygame.display.set_caption('Element Z')
 Clock = pygame.time.Clock()
 running = True
 
-# image loading - loads all images used for the game, using the join method we can find the desired image
+# file/image loading - loads all images used for the game, using the join method we can find the desired image
 # making the code more robust overall.
 game_background = pygame.image.load(join('images', 'background.png')).convert()
 asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
 star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
+font = pygame.font.Font(join('images', 'blank space.otf'), 32)
 
 # if an image has no transparent pixels we want to use .convert otherwise .convert_alpha, increases fps, runs smoother
 # creating a group for all sprites for better optimization
@@ -132,19 +156,16 @@ while running:
     # calls an update method on all the sprites inside the group, passing delta time through it
     all_sprites.update(dt)
     # collision setup
-    if pygame.sprite.spritecollide(player, asteroid_sprites, True):
-        print('Collision')
+    collisions()
 
-    for projectile in projectile_sprites:
-        collided_sprites = pygame.sprite.spritecollide(projectile, asteroid_sprites, True)
-        if collided_sprites:
-            projectile.kill()
     # fill the screen with colour to wipe away anything from last frame
     screen.fill("Gray")
 
     # render game here
     screen.blit(game_background, (0, 0))
 
+    # displays the score before every sprite therefore making it so that the player and asteroids will cover it
+    display_score()
     # draws every image in the group
     all_sprites.draw(screen)
 
