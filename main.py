@@ -91,6 +91,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
 
+# use session 10 slides for animation cycle
 class AsteroidAnimation(pygame.sprite.Sprite):
     def __init__(self, frames, pos, groups):
         super().__init__(groups)
