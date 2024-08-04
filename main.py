@@ -100,8 +100,11 @@ class AsteroidAnimation(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=pos)
 
     def update(self, dt):
-        self.frame_index += 5 * dt
-        self.image = self.frames[int(self.frame_index)]
+        self.frame_index += 20 * dt
+        if self.frame_index < len(self.frames):
+            self.image = self.frames[int(self.frame_index)]
+        else:
+            self.kill()
 
 def collisions():
     # making running a global variable, so I am able to call it here to shut down the game on collision without creating
