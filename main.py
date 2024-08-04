@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         # projectile firing
         recent_keys = pygame.key.get_pressed()
         if recent_keys[pygame.K_SPACE] and self.can_shoot:
-            Projectile(projectile_main, self.rect.midtop, all_sprites)
+            Projectile(projectile_main, self.rect.midtop, (all_sprites, projectile_sprites))
             self.can_shoot = False
             self.projectile_shoot_time = pygame.time.get_ticks()
 
@@ -101,12 +101,15 @@ running = True
 game_background = pygame.image.load(join('images', 'background.png')).convert()
 asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha()
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
+star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
 
 # if an image has no transparent pixels we want to use .convert otherwise .convert_alpha, increases fps, runs smoother
 # creating a group for all sprites for better optimization
 # changed code to use a single import 20 times rather than creating 20 at once for better efficiency
 all_sprites = pygame.sprite.Group()
-star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
+asteroid_sprites = pygame.sprite.Group()
+projectile_sprites = pygame.sprite.Group()
+
 for i in range(20):
     Star(all_sprites, star_image)
 player = Player(all_sprites)
@@ -125,10 +128,17 @@ while running:
             running = False
         if event.type == asteroid_event:
             x, y = randint(0, screenx), randint(-200, -100)
-            Asteroid(asteroid_main, (x, y), all_sprites)
+            Asteroid(asteroid_main, (x, y), (all_sprites, asteroid_sprites))
     # calls an update method on all the sprites inside the group, passing delta time through it
     all_sprites.update(dt)
+    # collision setup
+    if pygame.sprite.spritecollide(player, asteroid_sprites, True):
+        print('Collision')
 
+    for projectile in projectile_sprites:
+        collided_sprites = pygame.sprite.spritecollide(projectile, asteroid_sprites, True)
+        if collided_sprites:
+            projectile.kill()
     # fill the screen with colour to wipe away anything from last frame
     screen.fill("Gray")
 
