@@ -29,6 +29,12 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.projectile_shoot_time >= self.cooldown_duration:
                 self.can_shoot = True
 
+        # session 9 mask creation for pixel perfect collision
+        mask = pygame.mask.from_surface(self.image)
+        mask_surf = mask.to_surface()
+        mask_surf.set_colorkey((0,0,0))
+        self.image = mask_surf
+
     # pygame.key / pygame.mouse are better for input than event loop as they make it easier to integrate with classes
     # also can check for continuous presses
     # input - storing return value inside a var for arrow keys + WASD movement using a boolean value
@@ -102,10 +108,11 @@ def collisions():
 
 
 def display_score():
-    current_time = pygame.time.get_ticks()
+    current_time = pygame.time.get_ticks() // 100
     text_score = font.render(str(current_time), True, 'white')
     text_rect = text_score.get_rect(midbottom=(screenx / 2, screeny - 50))
     screen.blit(text_score, text_rect)
+    pygame.draw.rect(screen, (240, 240, 240), text_rect.inflate(30, 20), 5, 10)
 
 
 # default pygame setup
