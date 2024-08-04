@@ -29,12 +29,6 @@ class Player(pygame.sprite.Sprite):
             if current_time - self.projectile_shoot_time >= self.cooldown_duration:
                 self.can_shoot = True
 
-        # session 9 mask creation for pixel perfect collision
-        mask = pygame.mask.from_surface(self.image)
-        mask_surf = mask.to_surface()
-        mask_surf.set_colorkey((0,0,0))
-        self.image = mask_surf
-
     # pygame.key / pygame.mouse are better for input than event loop as they make it easier to integrate with classes
     # also can check for continuous presses
     # input - storing return value inside a var for arrow keys + WASD movement using a boolean value
@@ -78,26 +72,32 @@ class Projectile(pygame.sprite.Sprite):
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, surf, pos, groups):
         super().__init__(groups)
+        self.original_surf = surf
         self.image = surf
         self.rect = self.image.get_rect(center=pos)
         self.start_time = pygame.time.get_ticks()
         self.lifetime = 3000
         self.dir = pygame.Vector2(uniform(-0.5, 0.5), 1)
         self.speed = randint(420, 520)
+        self.rotation_speed = randint(52, 88)
+        self.rotation = 0
 
     def update(self, dt):
         self.rect.center += self.dir * self.speed * dt
         if pygame.time.get_ticks() - self.start_time >= self.lifetime:
             self.kill()
-
+        self.rotation += self.rotation_speed * dt
+        self.image = pygame.transform.rotozoom(self.original_surf, self.rotation, 1)
+        self.rect = self.image.get_rect(center = self.rect.center)
 
 def collisions():
     # making running a global variable, so I am able to call it here to shut down the game on collision without creating
     # a new variable. Not the best way to go around making a loss state however for a small pygame project like this
     # it seems good enough.
+    # session 9 mask creation for pixel perfect collision
     global running
 
-    collision_sprites = pygame.sprite.spritecollide(player, asteroid_sprites, True)
+    collision_sprites = pygame.sprite.spritecollide(player, asteroid_sprites, True, pygame.sprite.collide_mask)
     if collision_sprites:
         running = False
 
