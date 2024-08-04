@@ -88,7 +88,20 @@ class Asteroid(pygame.sprite.Sprite):
             self.kill()
         self.rotation += self.rotation_speed * dt
         self.image = pygame.transform.rotozoom(self.original_surf, self.rotation, 1)
-        self.rect = self.image.get_rect(center = self.rect.center)
+        self.rect = self.image.get_rect(center=self.rect.center)
+
+
+class AsteroidAnimation(pygame.sprite.Sprite):
+    def __init__(self, frames, pos, groups):
+        super().__init__(groups)
+        self.frames = frames
+        self.frame_index = 0
+        self.image = self.frames[self.frame_index]
+        self.rect = self.image.get_rect(center=pos)
+
+    def update(self, dt):
+        self.frame_index += 5 * dt
+        self.image = self.frames[int(self.frame_index)]
 
 def collisions():
     # making running a global variable, so I am able to call it here to shut down the game on collision without creating
@@ -105,6 +118,7 @@ def collisions():
         collided_sprites = pygame.sprite.spritecollide(projectile, asteroid_sprites, True)
         if collided_sprites:
             projectile.kill()
+            AsteroidAnimation(explosion_animation, projectile.rect.midtop, all_sprites)
 
 
 def display_score():
@@ -133,6 +147,7 @@ asteroid_main = pygame.image.load(join('images', 'asteroid.png')).convert_alpha(
 projectile_main = pygame.image.load(join('images', 'projectile.png')).convert_alpha()
 star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
 font = pygame.font.Font(join('images', 'blank space.otf'), 32)
+explosion_animation = [pygame.image.load(join('images', 'asteroid_anim', f'{i}.png')).convert_alpha() for i in range(8)]
 
 # if an image has no transparent pixels we want to use .convert otherwise .convert_alpha, increases fps, runs smoother
 # creating a group for all sprites for better optimization
