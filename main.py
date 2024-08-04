@@ -7,14 +7,14 @@ import pygame
 
 
 # sprites and classes from session 9 - look at slides for help
-# player class, already re-sized the asset in a separate program, I will not be needing a transform.scale
-# using vector math for movement as vectors are incredibly powerful, dir short for direction.
+# player class, already re-sized the asset in a separate program, I will not be needing a transform.scale for that
+# using vector math for movement as vectors are incredibly powerful. -dir short for direction.
 class Player(pygame.sprite.Sprite):
     def __init__(self, groups):
         super().__init__(groups)
         self.image = pygame.image.load(join('images', 'player.png')).convert_alpha()
         self.rect = self.image.get_rect(center=(screenx / 2, screeny / 2))
-        self.speed = 300
+        self.speed = 300  # speed value, default = 300
         self.dir = pygame.math.Vector2()
 
         # anti-spam system
@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
             Projectile(projectile_main, self.rect.midtop, (all_sprites, projectile_sprites))
             self.can_shoot = False
             self.projectile_shoot_time = pygame.time.get_ticks()
-
+            projectile_sound.play()
         self.projectile_timer()
 
 
@@ -106,6 +106,7 @@ class AsteroidAnimation(pygame.sprite.Sprite):
         else:
             self.kill()
 
+
 def collisions():
     # making running a global variable, so I am able to call it here to shut down the game on collision without creating
     # a new variable. Not the best way to go around making a loss state however for a small pygame project like this
@@ -122,8 +123,10 @@ def collisions():
         if collided_sprites:
             projectile.kill()
             AsteroidAnimation(explosion_animation, projectile.rect.midtop, all_sprites)
+            explosion_sound.play()
 
 
+# function to display score called later down in code, boxes it in a rectangle
 def display_score():
     current_time = pygame.time.get_ticks() // 100
     text_score = font.render(str(current_time), True, 'white')
@@ -152,6 +155,14 @@ star_image = pygame.image.load(join('images', 'star.png')).convert_alpha()
 font = pygame.font.Font(join('images', 'blank space.otf'), 32)
 explosion_animation = [pygame.image.load(join('images', 'asteroid_anim', f'{i}.png')).convert_alpha() for i in range(8)]
 
+# sound imports
+projectile_sound = pygame.mixer.Sound(join('sound', 'projectile.wav'))
+projectile_sound.set_volume(0.08)
+explosion_sound = pygame.mixer.Sound(join('sound', 'explosion.wav'))
+explosion_sound.set_volume(0.22)
+background_sound = pygame.mixer.Sound(join('sound', 'breakcore.wav'))
+background_sound.set_volume(0.26)
+background_sound.play(loops=-1)
 # if an image has no transparent pixels we want to use .convert otherwise .convert_alpha, increases fps, runs smoother
 # creating a group for all sprites for better optimization
 # changed code to use a single import 20 times rather than creating 20 at once for better efficiency
@@ -159,7 +170,8 @@ all_sprites = pygame.sprite.Group()
 asteroid_sprites = pygame.sprite.Group()
 projectile_sprites = pygame.sprite.Group()
 
-for i in range(20):
+# amount of stars that get placed at random
+for i in range(22):
     Star(all_sprites, star_image)
 player = Player(all_sprites)
 
